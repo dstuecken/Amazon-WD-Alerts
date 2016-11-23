@@ -3,6 +3,9 @@ namespace dstuecken\WdAlerts\Crawler;
 
 use dstuecken\Notify\NotificationCenter;
 use dstuecken\WdAlerts\Config;
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\RequestOptions;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -82,26 +85,32 @@ class Crawler
         $notificationCenter = $this->notification;
 
         try {
-            $contextOptions = [
-                "ssl" => [
-                    "verify_peer" => false,
-                    "verify_peer_name" => false,
-                ],
-                'http' => [
-                    'method' => "GET",
-                    'header' =>
-                        "Accept-language: " . $this->config->get('options', 'acceptLanguage') . "\r\n" .
-                        "User-Agent: " . $this->config->get('options', 'userAgent') . "\r\n",
-                    'proxy' => $this->config->getOption('proxy'),
-                    'request_fulluri' => true,
-                ],
-            ];
+            $client = new Client();
+            $jar = new CookieJar();
+            $listingUrl = rtrim($amazonPageUrl, '/') . "/" . $this->engine->getArticleId();
 
             while (1) {
                 try {
-                    $listingUrl = rtrim($amazonPageUrl, '/') . "/" . $this->engine->getArticleId();
+                    $res = $client->request('GET', $listingUrl, [
+                        RequestOptions::ALLOW_REDIRECTS => [
+                            'max'             => 10,
+                        ],
+                        RequestOptions::COOKIES => $jar,
+                        RequestOptions::CONNECT_TIMEOUT => 10,
+                        // RequestOptions::DEBUG => true,
+                        RequestOptions::HEADERS => [
+                            'Accept-Encoding' => 'gzip, deflate, sdch, br',
+                            'Cache-Control' => 'max-age=0',
+                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'User-Agent' => $this->config->get('options', 'userAgent'),
+                            'Accept-language' => $this->config->get('options', 'acceptLanguage'),
+                            'Connection' => 'keep-alive'
+                        ],
+                        RequestOptions::PROXY => $this->config->getOption('proxy'),
+                        RequestOptions::VERIFY => true,
+                    ]);
 
-                    if ($data = @file_get_contents($listingUrl, false, stream_context_create($contextOptions))) {
+                    if ($data = $res->getBody()->getContents()) {
                         $crawler = new \Symfony\Component\DomCrawler\Crawler($data);
 
                         $result = $this->engine->parse($crawler);
@@ -159,7 +168,7 @@ class Crawler
                             }
                         }
                     } else {
-                        $this->consoleOutput("Error retrieving page: <error>" . error_get_last()['message'] . '</error>');
+                        $this->consoleOutput("Error retrieving page (". $res->getStatusCode() ."): <error>" . error_get_last()['message'] . '</error>');
                     }
 
                     $this->consoleOutput(sprintf("Sleeping <comment>%s</comment> seconds..\n", $this->config->getOption('updateInterval')));
@@ -167,11 +176,17 @@ class Crawler
                     sleep($this->config->getOption('updateInterval'));
 
                 } catch (\Exception $e) {
-                    $this->consoleOutput($e->getMessage());
-                    $notificationCenter->error($e->getMessage());
+                    // Amazon thinks we are a bot..
+                    if (isset($data) && (strstr($data, 'To discuss automated access to Amazon data please contact'))) {
+                        $this->consoleOutput('Damn, Amazon rejected our request. Retrying in five seconds.');
+                    }
+                    else {
+                        $this->consoleOutput($e->getMessage());
+                        $notificationCenter->error($e->getMessage());
+                    }
 
                     // Sleep one second if an error occurred
-                    sleep(1);
+                    sleep(5);
                 }
             }
         } catch (\Exception $e) {
