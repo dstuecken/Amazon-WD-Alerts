@@ -1,6 +1,6 @@
 # Amazon Warehouse Deals Alert
 
-Console utility that scans for new warehouse deals and notifies you about their existnce. Even via speech output on Mac OS ;-)
+Console utility that scans for new warehouse deals and notifies you about their existence. Even via speech output on Mac OS ;-)
 
 [![License](https://poser.pugx.org/dstuecken/Amazon-WD-Alerts/license)](https://packagist.org/packages/dstuecken/Amazon-WD-Alerts)
 [![Latest Stable Version](https://poser.pugx.org/dstuecken/Amazon-WD-Alerts/v/stable)](https://packagist.org/packages/dstuecken/Amazon-WD-Alerts)
