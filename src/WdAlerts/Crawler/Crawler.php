@@ -3,6 +3,7 @@ namespace dstuecken\WdAlerts\Crawler;
 
 use dstuecken\Notify\NotificationCenter;
 use dstuecken\WdAlerts\Config;
+use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
@@ -193,6 +194,8 @@ class Crawler
 
         if ($this->config->get('log', 'enabled')) {
             $this->logger->pushHandler(new StreamHandler($this->config->get('log', 'file'), Logger::INFO));
+        } else {
+            $this->logger->pushHandler(new NullHandler());
         }
     }
 }
