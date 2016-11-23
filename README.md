@@ -3,13 +3,19 @@
 Console utility that scans for new warehouse deals and notifies you about their existence. Even via speech output on Mac OS ;-)
 
 [![License](https://poser.pugx.org/dstuecken/Amazon-WD-Alerts/license)](https://packagist.org/packages/dstuecken/Amazon-WD-Alerts)
-[![Latest Stable Version](https://poser.pugx.org/dstuecken/Amazon-WD-Alerts/v/stable)](https://packagist.org/packages/dstuecken/Amazon-WD-Alerts)
 
 ## Requirements
 
 * PHP 5.4
 
-## Installation
+## Installation from source 
+
+Clone
+
+```shell
+git clone https://github.com/dstuecken/Amazon-WD-Alerts.git
+cd Amazon-WD-Alerts
+```
 
 Install all dependencies via composer:
 
@@ -19,10 +25,25 @@ composer install
 
 Check https://getcomposer.org/download/ if you don't have composer installed.
 
+## Download binary
+
+Or just use this binary with all dependencies included:
+
+https://github.com/dstuecken/Amazon-WD-Alerts/releases/download/1.0/Amazon-WD-Alerts.zip
+
 # Usage
+
+Mac OS & Linux
 
 ```shell
 ./check.sh B01BWAHNH4
+```
+
+Windows
+
+```shell
+cd Amazon-WD-Alerts
+c:/path/to/php.exe check.php B01BWAHNH4
 ```
 
 Where B01BWAHNH4 is the article number from Amazon.
