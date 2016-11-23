@@ -28,3 +28,11 @@ Check https://getcomposer.org/download/ if you don't have composer installed.
 Where B01BWAHNH4 is the article number from Amazon.
 
 There is a config called .config.yml where you can define some options like smtp mail notifications or speech output on Mac OS.
+
+### How does it look like?
+
+#### Console notification
+![consolenotification](https://cloud.githubusercontent.com/assets/493399/20566057/1fa6ecf6-b194-11e6-8b5c-f9c8d47b1a52.png)
+
+#### Mac OS notification
+![macosnotification](https://cloud.githubusercontent.com/assets/493399/20566058/1fc07338-b194-11e6-90db-40fc23a75942.png)
