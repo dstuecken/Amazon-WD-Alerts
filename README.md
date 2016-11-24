@@ -94,6 +94,12 @@ options:
 
 ### FAQ
 
+#### How can i switch from amazon.de to amazon.com?
+
+Check out src/WdAlerts/Crawler/Amazon/config.yml to easily change it from amazon.de to amazon.com.
+
+You could also copy the folder `src/WdAlerts/Crawler/Amazon` to `src/WdAlerts/Crawler/AmazonCom`, change it within there and set your Engine to `engine: AmazonCom` in the main configuration file (.config.yml).
+
 #### How do I enable notification under Windows?
 
 Edit the "shellDeal:" Option in .config.yml to something like:
