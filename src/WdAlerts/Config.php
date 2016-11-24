@@ -51,6 +51,18 @@ class Config
     }
 
     /**
+     * Check if config option is set
+     *
+     * @param $section
+     * @param $key
+     *
+     * @return bool
+     */
+    public function has($section, $key) {
+        return isset($this->config[$section][$key]);
+    }
+
+    /**
      * Get options key
      *
      * @param string $key

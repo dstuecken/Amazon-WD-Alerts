@@ -84,7 +84,7 @@ class Crawler
      */
     private function openBrowser($link) {
         if ($this->config->getOption('startBrowserIfDealFound')) {
-            if (php_uname('s') !== 'Darwin') {
+            if (strstr(php_uname('s'), 'Darwin')) {
                 shell_exec('open ' . $link);
             } elseif (strstr(php_uname('s'), 'Windows')) {
                 shell_exec('explorer ' . $link);
@@ -115,7 +115,11 @@ class Crawler
         try {
             $client = new Client();
             $jar = new CookieJar();
-            $listingUrl = rtrim($crawlUrl, '/') . "/" . $this->engine->getArticleId() . $this->engine->getLinkAddition();
+            $listingUrl = rtrim($crawlUrl, '/') . "/" . $this->engine->getArticleId();
+
+            if (!$this->config->has('options', 'useRefLink') || $this->config->getOption('useRefLink')) {
+                $listingUrl .= $this->engine->getLinkAddition();
+            }
 
             while (1) {
                 try {

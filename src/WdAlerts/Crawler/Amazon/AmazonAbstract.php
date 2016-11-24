@@ -46,7 +46,7 @@ abstract class AmazonAbstract
      */
     public function getLinkAddition()
     {
-        return '?tag=d04c7-21';
+        return '?tag=awdal-21';
     }
 
     /**
