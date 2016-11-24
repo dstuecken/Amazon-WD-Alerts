@@ -65,6 +65,19 @@ class Crawler
     }
 
     /**
+     * Speech output on mac, text output on other systems
+     *
+     * @param string $text
+     */
+    private function macOsSpeechOutput($text) {
+        if ($this->config->getOption('enableMacOsSpeechOutput')) {
+            shell_exec('say -v Alex "'. $text .'"');
+        } else {
+            $this->consoleOutput($text);
+        }
+    }
+
+    /**
      * Start crawling process
      */
     public function crawl()
@@ -74,9 +87,7 @@ class Crawler
             shell_exec($shellStart);
         }
 
-        if ($this->config->getOption('enableMacOsSpeechOutput')) {
-            shell_exec('say -v Alex "I\'m happy to start scanning for your deals!"');
-        }
+        $this->macOsSpeechOutput('I\'m happy to start scanning for your deals!');
 
         // Amazon offer listing page, e.g. https://www.amazon.de/gp/offer-listing/B00ULWWFIC
         $amazonPageUrl = $this->engine->getCrawlUrl();
@@ -135,9 +146,7 @@ class Crawler
                                 shell_exec(str_replace([$result->getTitle(), $result->getCondition(), $result->getPrice()], ['%TITLE%', '%CONDITION%', '%PRICE%'], $shellDeal));
                             }
 
-                            if ($this->config->getOption('enableMacOsSpeechOutput')) {
-                                shell_exec('say -v Alex "Yay, your deal ' . $result->getTitle() . ' is available for ' . $result->getPrice() . '"');
-                            }
+                            $this->macOsSpeechOutput('Yay, your deal ' . $result->getTitle() . ' is available for ' . $result->getPrice() . '');
 
                             if ($this->config->get('mail', 'enabled')) {
                                 $transport = \Swift_SmtpTransport::newInstance(
@@ -196,6 +205,13 @@ class Crawler
 
     }
 
+    /**
+     * Crawler constructor.
+     *
+     * @param EngineContract $engine
+     * @param NotificationCenter $notificationCenter
+     * @param Config $config
+     */
     public function __construct(EngineContract $engine, NotificationCenter $notificationCenter, Config $config)
     {
         $this->engine = $engine;

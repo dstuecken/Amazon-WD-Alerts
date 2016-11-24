@@ -1,3 +1,5 @@
 #!/bin/bash
 
-php check.php $1
+PWD="$(cd "$(dirname "$0")"; pwd)/"
+
+php ${PWD}check.php $1

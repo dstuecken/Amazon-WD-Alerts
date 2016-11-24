@@ -19,7 +19,7 @@ options:
   engine: Amazon                    # Name of the Engine to use, e.g. Amazon results in \dstuecken\WdAlerts\Crawler\Amazon\Engine
   updateInterval: 30                # interval in seconds for new requests to amazon
   enableMacOsNotificationHandler: 1 # show growl like notifications in mac os x
-  enableMacOsSpeechOutput: 1        # shell_exec say command to enable speech output on mac os
+  enableMacOsSpeechOutput: 0        # shell_exec say command to enable speech output on mac os
   enableConsoleTextOutput: 1        # write status to console
   userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36 # user agent that is used for retrieving the pages
   acceptLanguage: de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4 # Accept-Language header for requests

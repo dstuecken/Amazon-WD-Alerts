@@ -24,8 +24,23 @@ $config = new Config(Yaml::parse(
 ));
 
 // Prevent timezone warnings
-if (!date_default_timezone_get()) {
+if (!ini_get('date.timezone')) {
     date_default_timezone_set('Europe/Berlin');
+}
+
+// Disable speech for Windows and Linux by default
+if (php_uname('s') !== 'Darwin') {
+    $config->override('options', 'enableMacOsSpeechOutput', false);
+}
+
+// Override php ini setting allow_url_fopen
+ini_set('allow_url_fopen', 1);
+
+// Check for requirements
+if (!extension_loaded('curl') && !ini_get('allow_url_fopen')) {
+    printf('You either need php-curl extension to be installed and activated, or allow_url_fopen = 1 in your php.ini.');
+    printf('php.ini location is: ' . php_ini_loaded_file());
+    die;
 }
 
 // Get notification center instance

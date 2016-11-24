@@ -51,7 +51,7 @@ class Engine implements EngineContract
     {
         $result = new ParseResult();
 
-        // Some XPath crawlings
+        // Some XPath text extractions
         $result->setTitle(trim($crawler->filterXPath($this->config['definitions']['xPathTitle'])->text()));
         $result->setPrice(trim($crawler->filterXPath($this->config['definitions']['xPathPrice'])->text()));
 

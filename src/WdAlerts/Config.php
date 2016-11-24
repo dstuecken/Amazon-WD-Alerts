@@ -19,6 +19,21 @@ class Config
     private $config;
 
     /**
+     * Set config option
+     *
+     * @param string $section
+     * @param string $key
+     * @param string $val
+     *
+     * @return $this
+     */
+    public function override($section, $key, $val) {
+        $this->config[$section][$key] = $val;
+
+        return $this;
+    }
+
+    /**
      * Get config variable
      *
      * @param string $section
