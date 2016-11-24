@@ -58,6 +58,39 @@ There is a config called .config.yml where you can define some options like smtp
 #### Mac OS notification
 ![macosnotification](https://cloud.githubusercontent.com/assets/493399/20566058/1fc07338-b194-11e6-90db-40fc23a75942.png)
 
+### .config.yml
+
+There is a configuration file called .config.yml that allows you to set some flexible options:
+
+```shell
+mail:                    # mails are sent using swift mailer
+  enabled: 0             # 1/0 smtp mailing enabled?
+  username: user         # smtp username
+  password: pass         # smtp password
+  from: user@example.com # from email address
+  to: user@example.com   # to email address (recipient)
+  subjectPrefix: Warehouse Deal Found # prefix mail subjects with this
+  smtp: smtp.gmail.com   # smtp hostname
+  port: 25               # smtp port
+  security: ssl          # security, blank for unsecure, ssl/tls for secure connections, check swiftmailer documentation for more details
+log:
+  enabled: 1             # 1/0 logging enabled?
+  file: log/system       # log file name
+hooks:                   # hooks - leave blank to disable
+  shellStart:            # shell command that is executed on starting the script
+  shellDeal:             # shell command that is executed if a deal was found | '%TITLE%', '%CONDITION%', '%PRICE%' is replaced by the findings
+  shellNoDeal:           # shell command that is executed if there is no deal
+options:
+  engine: Amazon                    # Name of the Engine to use, e.g. Amazon results in \dstuecken\WdAlerts\Crawler\Amazon\Engine
+  updateInterval: 30                # interval in seconds for new requests to amazon
+  enableMacOsNotificationHandler: 1 # show growl like notifications in mac os x
+  enableMacOsSpeechOutput: 1        # shell_exec say command to enable speech output on mac os
+  enableConsoleTextOutput: 1        # write status to console
+  userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36 # user agent that is used for retrieving the pages
+  acceptLanguage: de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4 # Accept-Language header for requests
+  proxy:                            # https proxy, e.g. tcp://85.26.146.169:80
+
+```
 
 ### FAQ
 
