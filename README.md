@@ -57,3 +57,14 @@ There is a config called .config.yml where you can define some options like smtp
 
 #### Mac OS notification
 ![macosnotification](https://cloud.githubusercontent.com/assets/493399/20566058/1fc07338-b194-11e6-90db-40fc23a75942.png)
+
+
+### FAQ
+
+#### How do I enable notification under Windows?
+
+Edit the "shellDeal:" Option in .config.yml to something like:
+
+```shell
+shellDeal: msg %username% "Your deal %TITLE% is available for %PRICE%! Go get it!"
+```
