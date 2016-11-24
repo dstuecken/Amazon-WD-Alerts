@@ -90,7 +90,7 @@ class Crawler
         $this->macOsSpeechOutput('I\'m happy to start scanning for your deals!');
 
         // Amazon offer listing page, e.g. https://www.amazon.de/gp/offer-listing/B00ULWWFIC
-        $amazonPageUrl = $this->engine->getCrawlUrl();
+        $crawlUrl = $this->engine->getCrawlUrl();
 
         // Instances
         $notificationCenter = $this->notification;
@@ -98,7 +98,7 @@ class Crawler
         try {
             $client = new Client();
             $jar = new CookieJar();
-            $listingUrl = rtrim($amazonPageUrl, '/') . "/" . $this->engine->getArticleId();
+            $listingUrl = rtrim($crawlUrl, '/') . "/" . $this->engine->getArticleId() . $this->engine->getLinkAddition();
 
             while (1) {
                 try {

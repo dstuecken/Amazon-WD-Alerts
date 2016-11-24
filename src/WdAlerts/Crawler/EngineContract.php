@@ -26,6 +26,11 @@ interface EngineContract
     public function getArticleId();
 
     /**
+     * @return string
+     */
+    public function getLinkAddition();
+
+    /**
      * @param DomCrawler $crawler
      * @return ParseResult
      */
