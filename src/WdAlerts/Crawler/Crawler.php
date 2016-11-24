@@ -78,6 +78,23 @@ class Crawler
     }
 
     /**
+     * @param $link
+     *
+     * @return $this
+     */
+    private function openBrowser($link) {
+        if ($this->config->getOption('startBrowserIfDealFound')) {
+            if (php_uname('s') !== 'Darwin') {
+                shell_exec('open ' . $link);
+            } elseif (strstr(php_uname('s'), 'Windows')) {
+                shell_exec('explorer ' . $link);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Start crawling process
      */
     public function crawl()
@@ -137,15 +154,21 @@ class Crawler
                                 $listingUrl
                             );
 
+                            // Mac OS notification
                             $notificationCenter->info($body);
 
+                            // Show console message
                             $this->consoleOutput($body);
+
+                            // Open web browser
+                            $this->openBrowser($listingUrl);
 
                             $shellDeal = $this->config->get('hooks', 'shellDeal');
                             if ($shellDeal) {
                                 shell_exec(str_replace([$result->getTitle(), $result->getCondition(), $result->getPrice()], ['%TITLE%', '%CONDITION%', '%PRICE%'], $shellDeal));
                             }
 
+                            // Say it out loud
                             $this->macOsSpeechOutput('Yay, your deal ' . $result->getTitle() . ' is available for ' . $result->getPrice() . '');
 
                             if ($this->config->get('mail', 'enabled')) {

@@ -90,6 +90,7 @@ options:
   enableMacOsNotificationHandler: 1 # show growl like notifications in mac os x
   enableMacOsSpeechOutput: 1        # shell_exec say command to enable speech output on mac os
   enableConsoleTextOutput: 1        # write status to console
+  startBrowserIfDealFound: 1        # opens your favorite browser and opens your deal if one was found
   userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36 # user agent that is used for retrieving the pages
   acceptLanguage: de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4 # Accept-Language header for requests
   proxy:                            # https proxy, e.g. tcp://85.26.146.169:80
