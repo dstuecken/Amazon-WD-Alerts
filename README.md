@@ -96,7 +96,17 @@ options:
 
 #### How can i switch from amazon.de to amazon.com?
 
-Check out src/WdAlerts/Crawler/Amazon/config.yml to easily change it from amazon.de to amazon.com.
+Check out src/WdAlerts/Crawler/Amazon/config.yml to easily change it from amazon.de to amazon.com so that it looks like this:
+
+```shell
+definitions:
+  offersUrl: https://www.amazon.com/gp/offer-listing/                                       # Base URL for Amazons new and used items
+  searchFor: "#olpOfferList img[alt='Amazon Warehouse Deals']"                                    # Search for this css selector within html of offersUrl
+  xPathTitle: //*[@id="olpProductDetails"]/div[1]/h1                                       # Search for this XPath to find the title
+  xPathPrice: //*[@id="olpOfferList"]/div/div/div[2]/div[1]/span[1]                        # Search for this XPath to find the price
+  xPathCondition: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[1]/span                # Search for this XPath to find the condition
+  xPathDescription: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[2]/div[1]/text()     # Search for this XPath to find the condition's description
+```
 
 You could also copy the folder `src/WdAlerts/Crawler/Amazon` to `src/WdAlerts/Crawler/AmazonCom`, change it within there and set your Engine to `engine: AmazonCom` in the main configuration file (.config.yml).
 
