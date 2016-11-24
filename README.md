@@ -54,8 +54,12 @@ There is a config called .config.yml where you can define some options like smtp
 
 #### Console notification
 ![consolenotification](https://cloud.githubusercontent.com/assets/493399/20566057/1fa6ecf6-b194-11e6-8b5c-f9c8d47b1a52.png)
+![consolenotification](https://cloud.githubusercontent.com/assets/493399/20594653/5c144f6e-b237-11e6-84ad-175911cf790a.png)
 
-#### Mac OS notification
+#### Default interval is 30 seconds
+![interval](https://cloud.githubusercontent.com/assets/493399/20594652/5c13c756-b237-11e6-9061-5885b1957bcb.png)
+
+#### Mac OS alert notification
 ![macosnotification](https://cloud.githubusercontent.com/assets/493399/20566058/1fc07338-b194-11e6-90db-40fc23a75942.png)
 
 ### .config.yml
