@@ -2,8 +2,8 @@
 namespace dstuecken\WdAlerts\Crawler\Amazon;
 
 use dstuecken\WdAlerts\Crawler\ParseResult;
+use dstuecken\WdAlerts\Exceptions\CrawlerException;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class CrawlerDefinitions
@@ -18,12 +18,12 @@ abstract class AmazonAbstract
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var string
      */
-    private $articleId;
+    protected $articleId;
 
     /**
      * @return string
@@ -56,17 +56,27 @@ abstract class AmazonAbstract
      */
     public function parse(Crawler $crawler)
     {
+        /**
+         * Validate configuration before start crawling
+         */
+        $this->validateConfig();;
         $result = new ParseResult();
 
-        // Some XPath text extractions
-        $result->setTitle(trim($crawler->filterXPath($this->config['definitions']['xPathTitle'])->text()));
-        $result->setPrice(trim($crawler->filterXPath($this->config['definitions']['xPathPrice'])->text()));
+        try {
+            // Some XPath text extractions
+            $result->setTitle(trim($crawler->filterXPath($this->config['definitions']['xPathTitle'])->text()));
+        } catch (\InvalidArgumentException $e) {
+            throw new CrawlerException('Error parsing Amazons website. Please check your article id or engine. (Engine: ' . __NAMESPACE__ . '; Crawler error: ' . $e->getMessage() . ')');
+        }
+
+        if (isset($this->config['definitions']['xPathPrice']) && $this->config['definitions']['xPathPrice']) {
+            $result->setPrice(trim($crawler->filterXPath($this->config['definitions']['xPathPrice'])->text()));
+        }
 
         // Is a warehouse deal available?
         $found = $crawler->filter($this->config['definitions']['searchFor']);
 
-        if ($found->count() > 0)
-        {
+        if ($found->count() > 0) {
             $result->setFound(true);
 
             try {
@@ -84,9 +94,7 @@ abstract class AmazonAbstract
             } catch (\Exception $e) {
                 ;
             }
-        }
-        else
-        {
+        } else {
             $result->setFound(false);
         }
 
@@ -94,15 +102,18 @@ abstract class AmazonAbstract
     }
 
     /**
-     * Engine constructor.
+     * Validate amazon configuration
+     *
+     * @throws \ErrorException
      */
-    public function __construct($amazonArticleId)
+    private function validateConfig()
     {
-        $this->config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
-        $this->articleId = $amazonArticleId;
-
         if (!isset($this->config['definitions'])) {
             throw new \ErrorException('Amazon config error: definitions section does not exist in config.yml.');
+        }
+
+        if (!isset($this->config['definitions']['xPathTitle']) && $this->config['definitions']['xPathTitle']) {
+            throw new \ErrorException('Amazon config error: xPathTitle definition not found in config.yml.');
         }
     }
 }

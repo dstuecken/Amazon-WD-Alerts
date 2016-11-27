@@ -3,6 +3,7 @@ namespace dstuecken\WdAlerts\Crawler\AmazonCom;
 
 use dstuecken\WdAlerts\Crawler\Amazon\AmazonAbstract;
 use dstuecken\WdAlerts\Crawler\EngineContract;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class CrawlerDefinitions
@@ -14,5 +15,12 @@ use dstuecken\WdAlerts\Crawler\EngineContract;
  */
 class Engine extends AmazonAbstract implements EngineContract
 {
-
+    /**
+     * Engine constructor.
+     */
+    public function __construct($amazonArticleId)
+    {
+        $this->config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
+        $this->articleId = $amazonArticleId;
+    }
 }
