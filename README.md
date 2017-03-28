@@ -29,7 +29,7 @@ Check https://getcomposer.org/download/ if you don't have composer installed.
 
 Or just use this binary with all dependencies included:
 
-https://github.com/dstuecken/Amazon-WD-Alerts/releases/download/1.0.2/amazon-wd-alerts.zip
+https://github.com/dstuecken/Amazon-WD-Alerts/releases/download/1.0.4/amazon-wd-alerts.zip
 
 # Usage
 
