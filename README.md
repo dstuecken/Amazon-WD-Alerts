@@ -36,17 +36,23 @@ https://github.com/dstuecken/Amazon-WD-Alerts/releases/download/1.0.2/amazon-wd-
 Mac OS & Linux
 
 ```shell
-./check.sh B01BWAHNH4
+./check.sh B01BWAHNH4 299,99
 ```
 
 Windows
 
 ```shell
 cd Amazon-WD-Alerts
-c:/path/to/php.exe check.php B01BWAHNH4
+c:/path/to/php.exe check.php B01BWAHNH4 299,99
 ```
 
-Where B01BWAHNH4 is the article number from Amazon.
+Where **B01BWAHNH4** is the article number from Amazon and **299,99** is the maximum price you want to pay.
+
+The price is additional. Leave it blank to just check for the deal itself. So for instance just do:
+
+```shell
+./check.sh B01BWAHNH4
+```
 
 There is a config called .config.yml where you can define some options like smtp mail notifications or speech output on Mac OS.
 
@@ -112,6 +118,7 @@ definitions:
   xPathPrice: //*[@id="olpOfferList"]/div/div/div[2]/div[1]/span[1]                     # Search for this XPath to find the price
   xPathCondition: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[1]/span             # Search for this XPath to find the condition
   xPathDescription: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[2]/div[1]/text()  # Search for this XPath to find the condition's description
+  locale: de_DE                                                                         # Locale of amazon.de
 ```
 
 You could also copy the folder `src/WdAlerts/Crawler/Amazon` to `src/WdAlerts/Crawler/AmazonCom`, change it within there and set your Engine to `engine: AmazonCom` in the main configuration file (.config.yml).
