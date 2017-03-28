@@ -11,6 +11,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 /**
  * Class Crawler
@@ -46,7 +47,12 @@ class Crawler
      * @var LoggerAwareInterface
      */
     private $logger;
-
+    
+    /**
+     * @var float
+     */
+    protected $maximumPrice = .0;
+    
     /**
      * Write console text if enabled
      *
@@ -69,7 +75,8 @@ class Crawler
      *
      * @param string $text
      */
-    private function macOsSpeechOutput($text) {
+    private function macOsSpeechOutput($text)
+    {
         if ($this->config->getOption('enableMacOsSpeechOutput')) {
             shell_exec('say -v Alex "'. $text .'"');
         } else {
@@ -82,7 +89,8 @@ class Crawler
      *
      * @return $this
      */
-    private function openBrowser($link) {
+    private function openBrowser($link)
+    {
         if ($this->config->getOption('startBrowserIfDealFound')) {
             if (strstr(php_uname('s'), 'Darwin')) {
                 shell_exec('open ' . $link);
@@ -92,6 +100,32 @@ class Crawler
         }
 
         return $this;
+    }
+    
+    /**
+     * Check for maximum price
+     *
+     * @param string|mixed $itemPrice
+     *
+     * @return bool
+     */
+    private function validateMaximumPrice($itemPrice) {
+        // Just return true if maximum price is set to .0 (which is the default)
+        if ($this->maximumPrice === .0) {
+            return true;
+        }
+        
+        // Extract price value (without currency signs)
+        if ($itemPrice = preg_match('/^.*?([0-9,\.]+).*?$/', $itemPrice, $matches)) {
+            $itemPrice = $matches[1];
+        }
+        
+        // Check for locale
+        if (!setlocale(LC_NUMERIC, $this->engine->getLocale())) {
+            $this->consoleOutput('You need to have the following locale installed in order to use price matchings properly: ' . $this->engine->getLocale());
+        }
+        
+        return ($this->maximumPrice > .0 && floatval($itemPrice) < $this->maximumPrice);
     }
 
     /**
@@ -143,11 +177,11 @@ class Crawler
                     ]);
 
                     if ($data = $res->getBody()->getContents()) {
-                        $crawler = new \Symfony\Component\DomCrawler\Crawler($data);
+                        $crawler = new DomCrawler($data);
 
                         $result = $this->engine->parse($crawler);
-
-                        if ($result->isFound()) {
+                        
+                        if ($result->isFound() && $this->validateMaximumPrice($result->getPrice())) {
                             // Warehouse deal found, prepare message:
                             $body = sprintf(
                                 "Item \"%s\" is available for %s!\nCondition is: %s\nDescription: %s\n\n%s",
@@ -196,7 +230,8 @@ class Crawler
                             }
                         } else {
                             // no warehouse deal
-                            $this->consoleOutput("No deal available. Current best price is <info>" . $result->getPrice() . "</info>.");
+                            $priceInfo = $this->maximumPrice === .0 ? '' : ' <comment>at '.$this->maximumPrice.'</comment>';
+                            $this->consoleOutput("No deal available".$priceInfo.". Current best price is <info>" . $result->getPrice() . "</info>.");
 
                             $shellNoDeal = $this->config->get('hooks', 'shellNoDeal');
                             if ($shellNoDeal) {
@@ -230,6 +265,23 @@ class Crawler
             $notificationCenter->error($e->getMessage());
         }
 
+    }
+    
+    /**
+     * @param float $maximumPrice
+     *
+     * @return $this
+     */
+    public function setMaximumPrice($maximumPrice)
+    {
+        // Disallow negative or invalid maximum prices
+        if ($maximumPrice < .0 || !$maximumPrice) {
+            throw new \InvalidArgumentException('Invalid price: Price should be positive and in the following format "1999.99".');
+        }
+        
+        $this->maximumPrice = floatval($maximumPrice);
+        
+        return $this;
     }
 
     /**

@@ -2,4 +2,4 @@
 
 PWD="$(cd "$(dirname "$0")"; pwd)/"
 
-php ${PWD}check.php $1
+php ${PWD}check.php $@

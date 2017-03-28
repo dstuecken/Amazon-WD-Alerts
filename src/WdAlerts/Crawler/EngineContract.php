@@ -31,6 +31,11 @@ interface EngineContract
     public function getLinkAddition();
 
     /**
+     * @return string
+     */
+    public function getLocale();
+
+    /**
      * @param DomCrawler $crawler
      * @return ParseResult
      */

@@ -12,8 +12,23 @@ use dstuecken\Notify\Handler\MacOSHandler;
 use dstuecken\WdAlerts\Crawler\Crawler;
 use dstuecken\WdAlerts\Crawler\Amazon\Engine as AmazonEngine;
 
+// Show usage
+if (isset($argv[1])) {
+    if ($argv[1] === '-h' || $argv[1] === '--help') {
+        printf("Amazon Warehouse Deal Alerts\n");
+        printf("For a detailed documentation, check https://github.com/dstuecken/Amazon-WD-Alerts\n\n");
+        printf("./check.sh [AMAZON-ID] [PRICE]\n");
+        printf("e.g. ./check.sh B00ULWWFIC 299.99\n");
+        printf("will check for article with id B00ULWWFIC for a maximum price of 299.99.\n");
+        die;
+    }
+}
+
 // Get article id from arguments
 $articleId = isset($argv[1]) ? $argv[1] : 'B00ULWWFIC';
+
+// Get maximum price
+$maximumPrice = isset($argv[2]) ? $argv[2] : '';
 
 // Include composer
 require 'vendor/autoload.php';
@@ -38,7 +53,7 @@ ini_set('allow_url_fopen', 1);
 
 // Check for requirements
 if (!extension_loaded('curl') && !ini_get('allow_url_fopen')) {
-    printf('You either need php-curl extension to be installed and activated, or allow_url_fopen = 1 in your php.ini.');
+    printf('You either need the php-curl extension to be installed and activated, or allow_url_fopen = 1 in your php.ini.');
     printf('php.ini location is: ' . php_ini_loaded_file());
     die;
 }
@@ -59,12 +74,18 @@ if (class_exists($engineClass)) {
     $engine = new AmazonEngine($articleId);
 }
 
+
 // Initialize crawler
 $crawler = new Crawler(
     $engine,
     $notificationCenter,
     $config
 );
+
+// Set Price to check for
+if ($maximumPrice) {
+    $crawler->setMaximumPrice($maximumPrice);
+}
 
 // Start crawling process
 $crawler->crawl();

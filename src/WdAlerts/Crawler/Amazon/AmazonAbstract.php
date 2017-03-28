@@ -40,6 +40,14 @@ abstract class AmazonAbstract
     {
         return $this->articleId;
     }
+    
+    /**
+     * @return string
+     */
+    public function getLocale() {
+        return $this->config['definitions']['locale'] ?: 'de_DE';
+    }
+    
 
     /**
      * @return string

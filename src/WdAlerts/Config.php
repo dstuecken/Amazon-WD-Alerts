@@ -27,7 +27,8 @@ class Config
      *
      * @return $this
      */
-    public function override($section, $key, $val) {
+    public function override($section, $key, $val)
+    {
         $this->config[$section][$key] = $val;
 
         return $this;
@@ -58,7 +59,8 @@ class Config
      *
      * @return bool
      */
-    public function has($section, $key) {
+    public function has($section, $key)
+    {
         return isset($this->config[$section][$key]);
     }
 
