@@ -1,7 +1,7 @@
 definitions:
-  offersUrl: https://www.amazon.com/gp/offer-listing/                                       # Base URL for Amazons new and used items
-  searchFor: "#olpOfferList img[alt='Amazon Warehouse Deals']"                                    # Search for this css selector within html of offersUrl
-  xPathTitle: //*[@id="olpProductDetails"]/div[1]/h1                                       # Search for this XPath to find the title
+  offersUrl: https://www.amazon.com/gp/offer-listing/                                      # Base URL for Amazons new and used items
+  searchFor: "#olpOfferList img[alt='Amazon Warehouse Deals']"                             # Search for this css selector within html of offersUrl
+  xPathTitle: //div[@id="olpProduct"]/div/div[2]/div/div[2]/h1                             # Search for this XPath to find the title
   xPathPrice: //*[@id="olpOfferList"]/div/div/div[2]/div[1]/span[1]                        # Search for this XPath to find the price
   xPathCondition: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[1]/span                # Search for this XPath to find the condition
   xPathDescription: //*[@id="olpOfferList"]/div/div/div[2]/div[2]/div[2]/div[1]/text()     # Search for this XPath to find the condition's description
